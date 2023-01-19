@@ -1,0 +1,98 @@
+{%extends 'base.html'%}
+
+{%block body_block%}
+
+<h1>welcome</h1>
+<!--render post form-->
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+
+        <form action="" method="post" enctype="multipart/form-data">
+            <h3>write your post here!</h3>
+            {%csrf_token%}
+            {{form.as_p}}
+            <input type="submit"value="add">
+          
+        </form>
+    </div>
+    <div class="col-4"></div>
+</div>
+<!--end of render post form-->
+<!---{{posts}}-->
+
+<div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+        <!-- Postlist start-->
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            {%for p in posts %}
+            
+            <div class="col-md-10 col-xl-8 col-xl-7">
+             <!-- Post preview-->
+             <div class="post-preview">
+                 <a href="post.html">
+                     <h2 class="post-title">{{p.title}}</h2>
+                    
+                 </a>
+                 <div class="post-preview">
+                    {%if p.image%}
+                    <div>
+                      <img src="{{p.image.url}}" alt="" class="W 100%">
+                    </div>
+                    {%endif%}
+
+                    </div>
+                 <p class="post-meta">
+                     Posted by
+                     <a href="#!">{{p.user}}</a>
+                     on {{p.created_date}}
+                 </p>
+                 <div class="card-footer">
+                    <a href="{%url 'post-delete' p.id%}" class="btn btn-outline btn-info"> Delete</a>
+                    <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
+      
+             </div>
+             <!--add_comment-->
+        <div>
+            <form action="{%url 'add_comments' p.id%}" method="post">
+                {%csrf_token%}
+                <input type="text" placeholder="enter your comment" name="comment" class="form-control">
+                <button type="submit" class="btn btn-outline-info mt-2 btn-sm"> add </button>
+                
+            </form>
+        </div>
+        <!--add_comment end-->
+        <!--comment list-->
+             <h5 class="post-title">Comments</h5>
+             {%for com in p.get_comment%}
+             <div>
+                like={{com.like_count}} 
+                comment= {{com}} 
+                #posted by={{com.user}}
+                <!--add like start-->
+                <a href="{%url 'comments_like' com.id%}" class="btn btn-warning btn-sm">like</a>
+                <!--add like end-->
+                <!--delete comment-->
+                
+                <a href="{%url 'comment-delete' com.id%}" class="btn btn-outline btn-info"> Delete</a>
+                <!--delete comment end--> 
+            </div>
+             {%endfor%}
+<!--end comment list-->
+
+        <!-- Divider-->
+        <hr class="my-4" />
+        </div>
+        {%endfor%}
+        </div>
+        <!--post list end-->
+        <!--list comments-->
+
+       
+
+    
+</div>
+  
+</div>
+
+{%endblock%}
